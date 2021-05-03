@@ -1,44 +1,121 @@
 #!/usr/bin/env python3
 # -*- coding: utf8 -*-
 """Route definitions"""
+#!/usr/bin/env python3
+# -*- coding: utf8 -*-
+"""Route definitions"""
 
-from app import app
+from flask import (
+            render_template,
+            request, redirect,
+            url_for,
+            flash)
+from app import app, db
 from datetime import datetime
+from app.database import Product
+from app.forms.products import ProductForm
 
-@app.route("/version")
-def version():
-    return {
+@app.route("/")
+def index():
+    """Simple index view that displays version info and server time"""
+    version = {
         "ok" : True,
         "message": "success",
         "version": "1.0.0",
         "server time": datetime.now().strftime("%F %H:%M:%S")
     }
+    return render_template("index.html", version=version)
 
-@app.route("/")
-def index():
-    return render_template("index.html")
 
 @app.route("/products")
 def get_products():
-    """Retrieve all products"""
-    return "Return all products"
+    """Retrieve and display all products"""
+    products = Product.query.all()
+    return render_template("products.html", product_list=products)
+
 
 @app.route("/products/<int:pid>")
 def get_product_detail(pid):
-    """Retrieve a single product"""
-    return "Single product detail"
+    """Retrieve and display a single product"""
+    product = Product.query.filter_by(id=pid).first()
+    return render_template("product_detail.html", product=product)
 
-@app.route("/products/<int:pid>", methods=["PUT"])
-def update_product(pid):
-    """Update a single product"""
-    return "Single product update"
 
 @app.route("/products", methods=["POST"])
 def create_product():
     """Create a new product"""
-    return "Create new product"
+    form = ProductForm(request.form)
+    if form.validate():
+        product = Product()
+        product.name = form.name.data
+        product.price = form.price.data
+        product.quantity = form.quantity.data
+        product.description = form.description.data
+        db.session.add(product)
+        db.session.commit()
+        flash("Product created!")
+        return redirect(url_for('get_products'))
 
-@app.route("/products/<int:pid>", methods=["DELETE"])
+    def product_quantity(number):
+        if number == product.quantity <= 100():
+            print(['background-color:red'])
+            return['background-color:red']
+        elif product.quantity == 500 >i< 101():
+            print(['background-color:yellow'])
+            return['background-color:yellow']
+        elif product.quantity == 1000 >i< 501():
+            print(['background-color:green'])
+            return['background-color:green']
+    
+    flash("Invalid data")
+    return redirect(url_for('get_products'))
+
+
+
+@app.route("/products/<int:pid>", methods=["POST"])
+def update_product(pid):
+    """Updates a single product"""
+    form = ProductForm(request.form)
+    if form.validate():
+        product = Product.query.filter_by(id=pid).first()
+        product.name = form.name.data
+        product.price = form.price.data
+        product.quantity = form.quantity.data
+        product.description = form.description.data
+        db.session.commit()
+        flash("Product updated!")
+        return redirect(url_for('get_products'))
+    flash("Invalid data")
+    return redirect(url_for('get_products'))
+
+
+@app.route("/products/registrations")
+def create_product_form():
+    """Renders the create product form"""
+    prod_form = ProductForm()
+    return render_template("create_form.html", form=prod_form)
+
+
+@app.route("/products/modifications/<int:pid>")
+def update_product_form(pid):
+    """Renders the update product form, which populates each form
+        field with product data for a given product id.
+    """
+    form = ProductForm()
+    product = Product.query.filter_by(id=pid).first()
+    return render_template("update_form.html", form=form, product=product)
+
+
+@app.route("/products/eliminations/<int:pid>")
 def delete_product(pid):
     """Soft delete a single product"""
-    return "Soft delete a product"
+    product = Product.query.filter_by(id=pid).first()
+    db.session.delete(product)
+    db.session.commit()
+    flash("Product deleted!")
+    return redirect(url_for('get_products'))
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template("404.html"), 404
