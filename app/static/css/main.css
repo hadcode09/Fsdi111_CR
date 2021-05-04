@@ -1,4 +1,18 @@
-body{
-    background-color: rgb(145, 173, 226);
+body {
+    background-image: url("static/images/graywall.jpg");
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 20px;
+    font-weight: bold;
+}
+
+.jumbotron{
+    color:#ffff;
 }
 
