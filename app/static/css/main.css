@@ -11,7 +11,7 @@ body {
 }
 
 .navbar_brand{
-    font-family:monospace;
+    font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
 .jumbotron{
@@ -21,13 +21,10 @@ body {
 .footer {
     position: fixed;
     left: 0;
-    bottom: 0;
+    bottom: -17;
     width: 100%;
     background-color: #f8f9fa;
-    color: white;
     text-align: center;
     padding-top: .3125rem;
     padding-bottom: .3125rem;
-    font-family: monospace;
-    font-size: 1.5rem;
 }
