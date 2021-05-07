@@ -56,17 +56,6 @@ def create_product():
         flash("Product created!")
         return redirect(url_for('get_products'))
 
-    def product_quantity(number):
-        if number == product.quantity <= 100():
-            print(['background-color:red'])
-            return['background-color:red']
-        elif product.quantity == 500 >i< 101():
-            print(['background-color:yellow'])
-            return['background-color:yellow']
-        elif product.quantity == 1000 >i< 501():
-            print(['background-color:green'])
-            return['background-color:green']
-    
     flash("Invalid data")
     return redirect(url_for('get_products'))
 

@@ -3,27 +3,32 @@
 {% block title %}Product catalog{% endblock title %}
 
 {% block content %}
-    {%set i = 0 %}
-    <div class="col-md-12" style="padding: 1%;">
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        {% for message in messages %}
-        <div class="toast show align-items-center text-white bg-primary border-0"
-            role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false">
-          <div class="d-flex">
-            <div class="toast-body">
-              {{ message }}
-            </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto"
-                  data-bs-dismiss="toast" aria-label="Close"></button>
-          </div>
-        </div>
-        {% endfor %}
+{%set i = 0 %}
+<div class="col-md-12" style="padding: 1%;">
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  {% for message in messages %}
+  <div class="toast show align-items-center text-white bg-primary border-0" role="alert" aria-live="assertive"
+    aria-atomic="true" data-autohide="false">
+    <div class="d-flex">
+      <div class="toast-body">
+        {{ message }}
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+        aria-label="Close"></button>
+    </div>
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+  <div class="row">
+    {% for product in product_list %}
+    {% if product.quantity <= 100 %} <div class="card" style="width: 18rem; margin: 0.5%; background-color: red;">
       {% endif %}
-    {% endwith %}
-      <div class="row">
-      {% for product in product_list %}
-      <div class="card" style="width: 18rem; margin: 0.5%;">
+      {% if 500 > product.quantity > 101  %} <div class="card2" style="width: 18rem; margin: 0.5%; background-color: yellow;">
+        {% endif %}
+        {% if 200000 > product.quantity > 501 %} <div class="card3" style="width: 18rem; margin: 0.5%; background-color: green;">
+          {% endif %}
           <div class="card-body">
             <h5 class="card-title">{{ product.name }}</h5>
             <h6 class="card-subtitle mb-2 text-muted">Price: {{ "${:,.2f}".format(product.price) }}</h6>
@@ -32,13 +37,13 @@
             <a href="{{ url_for('update_product_form', pid=product.id) }}" class="card-link">Update</a>
             <a href="{{ url_for('delete_product', pid=product.id) }}" class="card-link">Delete</a>
           </div>
-        </div>
-        {% set  i = i+1 %}
-        {% if i%4 == 0 %}
-        </div>
-        <div class="row">
-        {% endif %}
-      {% endfor %}
-      </div>
-    </div>
+  </div>
+  {% set i = i+1 %}
+  {% if i%4 == 0 %}
+</div>
+<div class="row">
+  {% endif %}
+  {% endfor %}
+</div>
+</div>
 {% endblock content %}
